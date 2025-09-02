@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BrahimAutoScan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #f9fafa;
+      margin: 0;
+      padding: 2rem;
+      color: #222;
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      color: #00796b;
+    }
+    form {
+      background: #ffffff;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    label {
+      margin-bottom: 0.25rem;
+      font-weight: bold;
+      display: block;
+    }
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 0.7rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      background: #fdfdfd;
+    }
+    .product {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 1rem;
+      background-color: #fff;
+    }
+    .product input[type="number"] {
+      margin-top: 0.5rem;
+    }
+    .total-price {
+      background: #e0f2f1;
+      color: #004d40;
+      font-weight: bold;
+      padding: 1rem;
+      text-align: center;
+      border-radius: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    button {
+      background-color: #009688;
+      color: white;
+      border: none;
+      border-radius: 1rem;
+      padding: 0.8rem;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #00796b;
+    }
+    #confirmation {
+      text-align: center;
+      color: green;
+      margin-top: 1rem;
+    }
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    a {
+      color: #009688;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1># BrahimAutoScan - كابتور فويت وروفولمون ماء المحرك</h1>
+
+  <form id="orderForm" onsubmit="sendOrder(event)">
+    <label for="fullname">الاسم الكامل</label>
+    <input type="text" id="fullname" required />
+
+    <label for="address">العنوان</label>
+    <input type="text" id="address" required />
+
+    <label for="contact">رقم الهاتف</label>
+    <input type="text" id="contact" required />
+
+    <div class="product">
+      <label><input type="checkbox" class="prod-check" data-price="5000" data-name="كابتور فويت ماء المحرك (مع ثقب القرعة)"> كابتور فويت ماء المحرك 5000 دج (مع ثقب القرعة)</label>
+      <input type="number" class="prod-qty" value="1" min="1" style="display:none;" />
+    </div>
+
+    <div class="product">
+      <label><input type="checkbox" class="prod-check" data-price="6000" data-name="كابتور فويت وروفولمون ماء المحرك (مع ثقب القرعة)"> كابتور فويت وروفولمون ماء المحرك 6000 دج (مع ثقب القرعة)</label>
+      <input type="number" class="prod-qty" value="1" min="1" style="display:none;" />
+    </div>
+
+    <div class="product">
+      <label><input type="checkbox" class="prod-check" data-price="6000" data-name="كابتور فويت ماء المحرك (بدون ثقب القرعة)"> كابتور فويت ماء المحرك 6000 دج (بدون ثقب القرعة)</label>
+      <input type="number" class="prod-qty" value="1" min="1" style="display:none;" />
+    </div>
+
+    <div class="product">
+      <label><input type="checkbox" class="prod-check" data-price="10000" data-name="كابتور فويت وروفولمون ماء المحرك (بدون ثقب القرعة)"> كابتور فويت وروفولمون ماء المحرك 10000 دج (بدون ثقب القرعة)</label>
+      <input type="number" class="prod-qty" value="1" min="1" style="display:none;" />
+    </div>
+
+    <div class="product">
+      <label><input type="checkbox" class="prod-check" data-price="2500" data-name="Relay GPL avec livraison"> Relay GPL 2500 دج (مع التوصيل)</label>
+      <input type="number" class="prod-qty" value="1" min="1" style="display:none;" />
+    </div>
+
+    <div class="total-price" id="total">السعر الإجمالي: 0 دج</div>
+
+    <button type="submit">إرسال الطلب عبر واتساب</button>
+  </form>
+
+  <div id="confirmation" style="display:none;">✅ تم استلام الطلب بنجاح! سيتم فتح تطبيق واتساب الآن.</div>
+
+  <footer>
+    <p>تابعنا على TikTok: <a href="https://vt.tiktok.com/ZSSkFUXPo/" target="_blank">@brahim.autoscan</a></p>
+    <p>🔒 معلوماتك تبقى سرية ولن يتم مشاركتها أبداً</p>
+    <p>لطلبات كبيرة (أكثر من 10 قطع): <a href="mailto:bahidjaballah@gmail.com">bahidjaballah@gmail.com</a></p>
+    <p>📞 0670408283</p>
+  </footer>
+
+  <script>
+    const checks = document.querySelectorAll('.prod-check');
+    const qtys = document.querySelectorAll('.prod-qty');
+    const totalBox = document.getElementById('total');
+
+    checks.forEach((check, index) => {
+      check.addEventListener('change', () => {
+        qtys[index].style.display = check.checked ? 'block' : 'none';
+        calculateTotal();
+      });
+      qtys[index].addEventListener('input', calculateTotal);
+    });
+
+    function calculateTotal() {
+      let total = 0;
+      checks.forEach((check, i) => {
+        if (check.checked) {
+          const price = parseInt(check.getAttribute('data-price'));
+          const qty = parseInt(qtys[i].value) || 0;
+          total += price * qty;
+        }
+      });
+      totalBox.textContent = `السعر الإجمالي: ${total} دج`;
+    }
+
+    function generateID() {
+      return Math.random().toString(36).substring(2, 8).toUpperCase();
+    }
+
+    function getDateTime() {
+      const now = new Date();
+      return {
+        date: now.toLocaleDateString('en-GB'),
+        time: now.toLocaleTimeString('en-GB'),
+      };
+    }
+
+    function sendOrder(e) {
+      e.preventDefault();
+      const fullname = document.getElementById('fullname').value;
+      const address = document.getElementById('address').value;
+      const contact = document.getElementById('contact').value;
+      const { date, time } = getDateTime();
+      const orderID = generateID();
+
+      let productsMsg = '';
+      let productsPDF = '';
+      let total = 0;
+
+      checks.forEach((check, i) => {
+        if (check.checked) {
+          const name = check.getAttribute('data-name');
+          const price = parseInt(check.getAttribute('data-price'));
+          const qty = parseInt(qtys[i].value) || 0;
+          const subtotal = price * qty;
+          total += subtotal;
+          productsMsg += `- ${name} × ${qty} = ${subtotal} دج\n`;
+          productsPDF += `${name} × ${qty} = ${subtotal} DZD\n`;
+        }
+      });
+
+      const message = `طلب جديد:\n🆔 رقم: ${orderID}\n👤 الاسم: ${fullname}\n📍 العنوان: ${address}\n📦 المنتجات:\n${productsMsg}💰 السعر الإجمالي: ${total} دج\n📞 تواصل: ${contact}\n📆 ${date} ⏰ ${time}`;
+      const whatsappURL = `https://wa.me/213670408283?text=${encodeURIComponent(message)}`;
+
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF();
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(16);
+      pdf.text("🧾 Reçu de commande - BrahimAutoScan", 10, 15);
+      pdf.setFont("helvetica", "normal");
+      pdf.setFontSize(12);
+      pdf.text(`🆔 Numéro de commande: ${orderID}`, 10, 30);
+      pdf.text(`📆 Date: ${date}`, 10, 40);
+      pdf.text(`⏰ Heure: ${time}`, 10, 50);
+      pdf.text(`👤 Nom complet: ${fullname}`, 10, 60);
+      pdf.text(`📍 Adresse: ${address}`, 10, 70);
+      pdf.text(`📞 Contact: ${contact}`, 10, 80);
+      pdf.text("📦 Produits:", 10, 90);
+      pdf.text(productsPDF, 10, 100);
+      pdf.text(`💰 Total: ${total} DZD`, 10, 140);
+      pdf.save(`Commande_${orderID}.pdf`);
+
+      document.getElementById('confirmation').style.display = 'block';
+      window.open(whatsappURL, '_blank');
+    }
+  </script>
+</body>
+</html>
